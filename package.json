@@ -1,0 +1,32 @@
+{
+  "name": "crizmas-async-utils",
+  "version": "0.9.0",
+  "description": "Utilities package used in conjunction with the crizmas-mvc framework.",
+  "private": true,
+  "author": {
+    "name": "Raul-Sebastian Mihăilă",
+    "email": "raul.mihaila@gmail.com"
+  },
+  "main": "./src/async-utils.js",
+  "peerDependencies": {
+    "crizmas-utils": "1.x"
+  },
+  "homepage": "https://raulsebastianmihaila.github.io/crizmas-mvc-docs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raulsebastianmihaila/crizmas-async-utils"
+  },
+  "bugs": "https://github.com/raulsebastianmihaila/crizmas-async-utils/issues",
+  "keywords": [
+    "mvc",
+    "async",
+    "utils",
+    "react",
+    "crizmas",
+    "reactjs",
+    "christmas",
+    "javascript",
+    "framework",
+    "front-end"
+  ]
+}
