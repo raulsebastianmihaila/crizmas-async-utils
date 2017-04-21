@@ -45,10 +45,13 @@
 
     errorResults.success = successResults;
 
-    let i = -1;
+    let index = -1;
 
+    // values can be any iterable
     for (const value of values) {
-      i += 1;
+      index += 1;
+
+      const i = index;
 
       if (isPromise(value)) {
         promisesCount += 1;
