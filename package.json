@@ -9,7 +9,7 @@
   },
   "main": "./src/async-utils.js",
   "peerDependencies": {
-    "crizmas-utils": "^0.2"
+    "crizmas-utils": "^0.2.1"
   },
   "homepage": "https://raulsebastianmihaila.github.io/crizmas-mvc-docs",
   "repository": {

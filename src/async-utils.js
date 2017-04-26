@@ -13,7 +13,7 @@
 
   const {isPromise, resolveThenable} = utils;
 
-  function awaitFor(val, success, error) {
+  const awaitFor = (val, success, error) => {
     if (isPromise(val)) {
       // make sure thenables are converted
       return resolveThenable(val).then(success, error);
@@ -24,9 +24,9 @@
     }
 
     return val;
-  }
+  };
 
-  function awaitAll(values, success, error) {
+  const awaitAll = (values, success, error) => {
     if (!values) {
       if (success) {
         return success(values);
@@ -56,7 +56,7 @@
       if (isPromise(value)) {
         promisesCount += 1;
 
-        awaitFor(value, result => {
+        awaitFor(value, (result) => {
           successResults[i] = result;
           settledPromises += 1;
 
@@ -67,7 +67,7 @@
               resolve(successResults);
             }
           }
-        }, result => {
+        }, (result) => {
           foundErrors = true;
           errorResults[i] = result;
           settledPromises += 1;
@@ -93,7 +93,7 @@
     }
 
     return successResults;
-  }
+  };
 
   const moduleExports = {
     awaitFor,
