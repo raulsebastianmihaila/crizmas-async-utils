@@ -1,3 +1,12 @@
+<a name="1.0.1"></a>
+# [1.0.1](https://github.com/raulsebastianmihaila/crizmas-async-utils/compare/v1.0.0...v1.0.1) (2018-04-21)
+
+### Updates
+- Add tests.
+- Small refactoring.
+- Add MIT license to package.json.
+- Updated the version of crizmas-utils peer dependency.
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/raulsebastianmihaila/crizmas-async-utils/compare/v0.2.3...v1.0.0) (2017-07-30)
 

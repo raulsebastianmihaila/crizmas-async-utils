@@ -13,23 +13,23 @@
 
   const {isPromise, resolveThenable} = utils;
 
-  const awaitFor = (val, success, error) => {
+  const awaitFor = (val, successFunc, errorFunc) => {
     if (isPromise(val)) {
       // make sure thenables are converted
-      return resolveThenable(val).then(success, error);
+      return resolveThenable(val).then(successFunc, errorFunc);
     }
 
-    if (success) {
-      return success(val);
+    if (successFunc) {
+      return successFunc(val);
     }
 
     return val;
   };
 
-  const awaitAll = (values, success, error) => {
+  const awaitAll = (values, successFunc, errorFunc) => {
     if (!values) {
-      if (success) {
-        return success(values);
+      if (successFunc) {
+        return successFunc(values);
       }
 
       return values;
@@ -85,11 +85,11 @@
       return new Promise((resolve_, reject_) => {
         resolve = resolve_;
         reject = reject_;
-      }).then(success, error);
+      }).then(successFunc, errorFunc);
     }
 
-    if (success) {
-      return success(successResults);
+    if (successFunc) {
+      return successFunc(successResults);
     }
 
     return successResults;
