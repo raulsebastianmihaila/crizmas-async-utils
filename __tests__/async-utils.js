@@ -1,3 +1,5 @@
+'use strict';
+
 const asyncUtils = require('../src/async-utils.js');
 
 const {awaitFor, awaitAll} = asyncUtils;
