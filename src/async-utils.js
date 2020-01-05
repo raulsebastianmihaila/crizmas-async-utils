@@ -95,9 +95,37 @@
     return successResults;
   };
 
+  function Cancellation() {
+    let cancellationReject;
+    const abortCtrl = new AbortController();
+    const cancellationPromise = new Promise((_, reject) => cancellationReject = reject);
+
+    return {
+      signal: abortCtrl.signal,
+
+      cancellable: (operation) => Promise.race([cancellationPromise, operation]),
+
+      cancel: (message) => {
+        cancellationReject(new CancellationReason(message));
+        abortCtrl.abort();
+
+        return cancellationPromise;
+      }
+    };
+  }
+
+  function CancellationReason(message) {
+    return {
+      message,
+      isCancellation: true
+    };
+  }
+
   const moduleExports = {
     awaitFor,
-    awaitAll
+    awaitAll,
+    Cancellation,
+    CancellationReason
   };
 
   if (isModule) {

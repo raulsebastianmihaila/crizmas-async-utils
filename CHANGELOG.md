@@ -1,3 +1,11 @@
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/raulsebastianmihaila/crizmas-async-utils/compare/v1.0.2...v1.1.0) (2020-01-06)
+
+### Updates
+- Add Cancellation.
+- Add Cancellation tests.
+- Update the jest dev dependency to fix its vulnerabilities.
+
 <a name="1.0.2"></a>
 # [1.0.2](https://github.com/raulsebastianmihaila/crizmas-async-utils/compare/v1.0.1...v1.0.2) (2018-12-08)
 

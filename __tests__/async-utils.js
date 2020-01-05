@@ -1,8 +1,10 @@
 'use strict';
 
+const utils = require('crizmas-utils');
 const asyncUtils = require('../src/async-utils.js');
 
-const {awaitFor, awaitAll} = asyncUtils;
+const {isPromise} = utils;
+const {awaitFor, awaitAll, Cancellation, CancellationReason} = asyncUtils;
 
 describe('async-utils', () => {
   describe('awaitFor', () => {
@@ -250,6 +252,157 @@ describe('async-utils', () => {
       ]).then((values) => {
         expect(values).toEqual([1, 2]);
       });
+    });
+  });
+
+  describe('Cancellation', () => {
+    test('cancellable returns a promise', () => {
+      const cancellation = new Cancellation();
+      const promise = cancellation.cancellable(Promise.resolve());
+
+      expect(isPromise(promise)).toBe(true);
+
+      return promise;
+    });
+
+    test('cancel returns a promise that rejects with the cancellation reason', () => {
+      expect.assertions(3);
+
+      const cancellation = new Cancellation();
+      const promise1 = cancellation.cancellable(1).then((value) => expect(value).toBe(1));
+      const promise2 = cancellation.cancel('testing cancellation').catch((reason) => {
+        expect(reason.isCancellation).toBe(true);
+        expect(reason.message).toBe('testing cancellation');
+      });
+
+      cancellation.cancel('cancelled');
+
+      return Promise.all([promise1, promise2]);
+    });
+
+    test('rejects with a cancellation reason with the provided message', () => {
+      expect.assertions(2);
+
+      const cancellation = new Cancellation();
+      const promise = cancellation.cancellable(Promise.resolve().then()).catch((reason) => {
+        expect(reason.isCancellation).toBe(true);
+        expect(reason.message).toBe('testing cancellation');
+      });
+
+      cancellation.cancel('testing cancellation');
+
+      return promise;
+    });
+
+    test('an abort event is dispatched on the abort signal', () => {
+      expect.assertions(2);
+
+      const abortHandler = jest.fn();
+      const cancellation = new Cancellation();
+      const promise = cancellation.cancellable(Promise.resolve().then()).catch((reason) => {
+        expect(reason.isCancellation).toBe(true);
+      });
+
+      cancellation.signal.onabort = abortHandler;
+
+      cancellation.cancel('testing cancellation');
+
+      expect(abortHandler.mock.calls.length).toBe(1);
+
+      return promise;
+    });
+
+    test('can cancel multiple operations', () => {
+      expect.assertions(5);
+
+      const abortHandler = jest.fn();
+      const cancellation = new Cancellation();
+      const promise1 = cancellation.cancellable(Promise.resolve().then()).catch((reason) => {
+        expect(reason.isCancellation).toBe(true);
+        expect(reason.message).toBe('testing cancellation');
+      });
+      const promise2 = cancellation.cancellable(Promise.resolve().then()).catch((reason) => {
+        expect(reason.isCancellation).toBe(true);
+        expect(reason.message).toBe('testing cancellation');
+      });
+
+      cancellation.signal.onabort = abortHandler;
+
+      cancellation.cancel('testing cancellation');
+
+      expect(abortHandler.mock.calls.length).toBe(1);
+
+      return Promise.all([promise1, promise2]);
+    });
+
+    test('cancelling with no associated operation doesn\'t throw', () => {
+      expect.assertions(3);
+
+      let promise;
+
+      expect(() => {
+        promise = new Cancellation().cancel('cancelled');
+      }).not.toThrow();
+
+      return promise.catch((reason) => {
+        expect(reason.isCancellation).toBe(true);
+        expect(reason.message).toBe('cancelled');
+      });
+    });
+
+    test('cancelling twice doesn\'t throw', () => {
+      expect.assertions(3);
+
+      const cancellation = new Cancellation();
+      const promise = cancellation.cancellable(Promise.resolve().then()).catch((reason) => {
+        expect(reason.isCancellation).toBe(true);
+        expect(reason.message).toBe('testing cancellation');
+      });
+
+      expect(() => {
+        cancellation.cancel('testing cancellation');
+        cancellation.cancel('testing cancellation2');
+      }).not.toThrow();
+
+      return promise;
+    });
+
+    test('cancelling already finished operation doesn\'t throw and operation is successful', () => {
+      expect.assertions(2);
+
+      const cancellation = new Cancellation();
+      const operation = Promise.resolve('success');
+
+      return operation.then(() => {
+        const promise = cancellation.cancellable(operation).then((val) => {
+          expect(val).toBe('success');
+        });
+
+        expect(() => {
+          cancellation.cancel('testing cancellation');
+          cancellation.cancel('testing cancellation2');
+        }).not.toThrow();
+
+        return promise;
+      });
+    });
+
+    test('marking non-promise as cancellable doesn\'t throw', () => {
+      expect(() => {
+        const cancellation = new Cancellation();
+
+        cancellation.cancellable(3);
+        cancellation.cancel();
+      }).not.toThrow();
+    });
+  });
+
+  describe('CancellationReason', () => {
+    test('has the mandatory fields', () => {
+      const cancellationReason = new CancellationReason('test');
+
+      expect(cancellationReason.isCancellation).toBe(true);
+      expect(cancellationReason.message).toBe('test');
     });
   });
 });

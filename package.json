@@ -36,6 +36,6 @@
   },
   "devDependencies": {
     "crizmas-utils": "^1.0.3",
-    "jest": "^23.6.0"
+    "jest": "^25.0.0"
   }
 }
