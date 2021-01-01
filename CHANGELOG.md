@@ -1,3 +1,9 @@
+<a name="1.1.1"></a>
+# [1.1.1](https://github.com/raulsebastianmihaila/crizmas-utils/compare/v1.1.0...v1.1.1) (2021-01-01)
+
+### Discontinued
+- Starting with v2 of crizmas-mvc this package was merged into crizmas-mvc.
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/raulsebastianmihaila/crizmas-async-utils/compare/v1.0.2...v1.1.0) (2020-01-06)
 
